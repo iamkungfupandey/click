@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Click Position Updater</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+</head>
+<body>
+    <h1>Update Click Position</h1>
+    <button onclick="updatePosition(1)">Fullscreen Click</button>
+    <button onclick="updatePosition(2)">Non-Fullscreen Click</button>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            databaseURL: "https://click-vina-default-rtdb.firebaseio.com/"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function updatePosition(position) {
+            database.ref('position').set(position)
+            .then(() => {
+                alert('Position updated to ' + position);
+            })
+            .catch((error) => {
+                console.error('Error updating position: ', error);
+            });
+        }
+    </script>
+</body>
+</html>
