@@ -3,17 +3,11 @@
 <head>
     <title>Click Position Updater</title>
     <!-- Load Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-</head>
-<body>
-    <h1>Update Click Position</h1>
-    <button onclick="updatePosition(1)">Fullscreen Click</button>
-    <button onclick="updatePosition(2)">Non-Fullscreen Click</button>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-    <p id="status"></p>
-
-    <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBEJhxuogTnMUnuhK0RF-xFm6fZji1EEi4",
@@ -27,13 +21,11 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        // Get a reference to the database service
-        const database = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
         function updatePosition(position) {
-            database.ref('position').set(position)
+            set(ref(database, 'position'), position)
             .then(() => {
                 document.getElementById('status').innerText = 'Position updated to ' + position + ' successfully.';
             })
@@ -44,7 +36,7 @@
         }
 
         function checkCurrentPosition() {
-            database.ref('position').get()
+            get(ref(database, 'position'))
             .then((snapshot) => {
                 if (snapshot.exists()) {
                     document.getElementById('status').innerText = 'Current position in database: ' + snapshot.val();
@@ -59,7 +51,16 @@
         }
 
         // Initial check for current position
-        checkCurrentPosition();
+        window.addEventListener('load', (event) => {
+            checkCurrentPosition();
+        });
     </script>
+</head>
+<body>
+    <h1>Update Click Position</h1>
+    <button onclick="updatePosition(1)">Fullscreen Click</button>
+    <button onclick="updatePosition(2)">Non-Fullscreen Click</button>
+
+    <p id="status"></p>
 </body>
 </html>
