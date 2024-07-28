@@ -11,6 +11,8 @@
     <button onclick="updatePosition(1)">Fullscreen Click</button>
     <button onclick="updatePosition(2)">Non-Fullscreen Click</button>
 
+    <p id="status"></p>
+
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -33,12 +35,31 @@
         function updatePosition(position) {
             database.ref('position').set(position)
             .then(() => {
-                alert('Position updated to ' + position);
+                document.getElementById('status').innerText = 'Position updated to ' + position + ' successfully.';
             })
             .catch((error) => {
+                document.getElementById('status').innerText = 'Error updating position: ' + error.message;
                 console.error('Error updating position: ', error);
             });
         }
+
+        function checkCurrentPosition() {
+            database.ref('position').get()
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    document.getElementById('status').innerText = 'Current position in database: ' + snapshot.val();
+                } else {
+                    document.getElementById('status').innerText = 'No position data available.';
+                }
+            })
+            .catch((error) => {
+                document.getElementById('status').innerText = 'Error fetching position: ' + error.message;
+                console.error('Error fetching position: ', error);
+            });
+        }
+
+        // Initial check for current position
+        checkCurrentPosition();
     </script>
 </body>
 </html>
